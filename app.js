@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const taskRoutes = require("./routes/taskRoutes");
+const checkSecretKey = require("./middleware/checkSecretKey");
 require("./utils/cronJob");
 
 const app = express();
@@ -26,6 +27,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(checkSecretKey);
 app.use(taskRoutes);
 
 const PORT = process.env.PORT || 2000;
