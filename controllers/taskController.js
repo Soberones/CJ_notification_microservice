@@ -17,16 +17,30 @@ exports.getTaskById = (req, res) => {
 };
 
 exports.createTask = (req, res) => {
-  const { phoneNumber, message } = req.body;
-  const isDev = process.env.NODE_ENV === "development";
+  const { phoneNumber, message, email, extendedMessage, executionHours } =
+    req.body;
+
+  console.log(req.body);
+
   const executionTime = new Date(
-    isDev ? Date.now() + 1 * 60 * 1000 : Date.now() + 5 * 24 * 60 * 60 * 1000
+    Date.now() + executionHours * 60 * 60 * 1000
   ).toISOString();
 
-  Task.createTask(phoneNumber, message, executionTime, (err, taskId) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json({ message: "Task scheduled successfully", taskId, executionTime });
-  });
+  Task.createTask(
+    phoneNumber,
+    message,
+    executionTime,
+    email,
+    extendedMessage,
+    (err, taskId) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({
+        message: "Task scheduled successfully",
+        taskId,
+        executionTime,
+      });
+    }
+  );
 };
 
 exports.updateTask = (req, res) => {

@@ -1,14 +1,29 @@
-const axios = require("axios");
+const twilio = require("twilio");
+const Task = require("../models/taskModel");
 
-exports.sendSms = (phoneNumber, message) => {
-  return console.log("sms send to", phoneNumber);
-  // Пример запроса с использованием Twilio API
-  //   return axios.post(
-  //     "https://api.twilio.com/2010-04-01/Accounts/ACXXXXXXXXXXXXXXXXX/Messages.json",
-  //     {
-  //       to: phoneNumber,
-  //       from: process.env.TWILIO_NUMBER,
-  //       body: message,
-  //     }
-  //   );
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = twilio(accountSid, authToken);
+
+exports.sendSms = async (phoneNumber, message) => {
+  try {
+    const twilioMessage = await client.messages.create({
+      body: message,
+      from: process.env.TWILIO_NUMBER,
+      to: phoneNumber,
+    });
+
+    console.table({
+      phoneNumber: twilioMessage.to,
+      message: twilioMessage.body,
+      status: twilioMessage.status,
+    });
+
+    return twilioMessage;
+  } catch (error) {
+    console.error("Error sending SMS:", error.message);
+    throw new Error();
+    // console.error("Error sending SMS:", error.message);
+    // return { success: false, message: "Failed to send SMS" };
+  }
 };

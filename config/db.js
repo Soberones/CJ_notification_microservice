@@ -8,6 +8,8 @@ db.serialize(() => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         phoneNumber TEXT,
         message TEXT,
+        email TEXT,
+        extendedMessage TEXT,
         executionTime DATETIME,
         status TEXT DEFAULT 'pending'
     )
