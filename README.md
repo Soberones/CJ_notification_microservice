@@ -42,6 +42,8 @@ Before you begin, ensure you have the following installed on your machine:
    TWILIO_NUMBER=your_twilio_phone_number
    SENDGRID_API_KEY="your_sendgrid_api_key"
    PORT=2000  # or any other port number
+   CORS_ORIGIN=https://example1.com,https://example2.com
+   SECRET_KEY=your_super_secret_key_here
    ```
 
 4. Set up the SQLite database. The application will automatically create a `tasks.db` file on first run.
@@ -83,6 +85,7 @@ Before you begin, ensure you have the following installed on your machine:
   ```bash
   curl -X POST http://localhost:2000/task \
   -H "Content-Type: application/json" \
+  -H "x-secret-key: your_super_secret_key_here" \
   -d '{"phoneNumber": "+1234567890", "message": "Test SMS", "executionHours": 2, "email": "test@test.com", "extendedMessage": "1234567890"}'
   ```
 
@@ -121,6 +124,9 @@ Before you begin, ensure you have the following installed on your machine:
 │
 ├── /utils            # Utility functions
 │   └── cronJob.js    # Cron job for checking tasks
+|
+├── /middleware       # Custom middleware for request validation
+│   └── checkSecretKey.js # Middleware to validate the secret key in headers
 │
 ├── .env              # Environment variables
 ├── app.js            # Main app entry point
@@ -134,6 +140,7 @@ Before you begin, ensure you have the following installed on your machine:
 - **SQLite**: Lightweight database for storing scheduled tasks.
 - **Twilio**: Cloud communication platform for sending SMS.
 - **Cron**: Task scheduling library to run scheduled jobs.
+- **Sendgrid**: Cloud communication platform for sending Emails.
 
 ## Environment Variables
 
@@ -142,6 +149,8 @@ Before you begin, ensure you have the following installed on your machine:
 - `TWILIO_NUMBER`: The Twilio number from which the SMS will be sent.
 - `SENDGRID_API_KEY`: Your sendgrid token
 - `PORT`: The port on which the server will run (default is 2000).
+- `CORS_ORIGIN`: A comma-separated list of allowed origins (e.g. `https://example1.com,https://example2.com`).
+- `SECRET_KEY`: A secret key used for signing tokens or other security mechanisms.
 
 ## Error Handling
 
